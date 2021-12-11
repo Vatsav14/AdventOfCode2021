@@ -31,6 +31,17 @@ def getValue(brac):
         return 25137
     return 0
 
+def newGetValue(brac):
+    if brac is '(':
+        return 1
+    if brac is '[':
+        return 2
+    if brac is '{':
+        return 3
+    if brac is '<':
+        return 4
+    return 0
+
 def part1():
     total = 0
     for each in data:
@@ -44,22 +55,31 @@ def complete(brac):
         if each is '[' or each is '(' or each is '{' or each is '<':
             stack.append(each)
         else:
-            print('ending')
             if len(stack) == 0:
-                completion.append('blank')
+                return None
             if each is ']' and stack[-1] is not '[':
-                completion.append(']')
+                return None
             if each is ')' and stack[-1] is not '(':
-                completion.append(')')
+                return None
             if each is '}' and stack[-1] is not '{':
-                completion.append('}')
+                return None
             if each is '>' and stack[-1] is not '<':
-                completion.append('>')
+                return None
             stack.pop()
-    return completion
+    return stack
+
+def calculateCompl(complete):
+    score = 0
+    while(len(complete) != 0):
+        score = ((5 * score) + newGetValue(complete.pop()))
+    return score
 
 def part2():
+    scoreList = []
     for each in data:
-        print(complete(each[0]))
+        temp = complete(each[0])
+        if temp is not None:
+            scoreList.append(calculateCompl(temp))
+    print(sorted(scoreList)[len(scoreList)//2])
 
 part2()
